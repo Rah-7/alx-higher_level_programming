@@ -3,81 +3,71 @@
 """ Node module """
 
 
-class Node:
-    """ Declares the Node class """
+class Node():
+    """Node Class."""
 
-    def __init__(self, data, next_node=None) -> None:
-        """
-        Intializes the attributes of node class
-        Args:
-            data: value of node
-            next_node:  address of next node
-        """
+    def __init__(self, data, next_node=None):
+        """Initialization of Node Class"""
         self.data = data
         self.next_node = next_node
 
     @property
     def data(self):
-        """ Gets data of a linked list """
+        """Data"""
         return self.__data
 
     @data.setter
-    def data(self, value):
-        if type(value) is not int:
+    def data(self, DataValue):
+        """Set data"""
+        if type(DataValue) != int:
             raise TypeError("data must be an integer")
-        else:
-            self.__data = value
+        self.__data = DataValue
 
     @property
     def next_node(self):
-        """ Gets next_node of a linked list """
+        """Node"""
         return self.__next_node
 
     @next_node.setter
-    def next_node(self, value):
-        if type(value) is not Node and value is not None:
+    def next_node(self, NodeValue):
+        """set Node"""
+        if NodeValue is not None and not isinstance(NodeValue, Node):
             raise TypeError("next_node must be a Node object")
-        else:
-            self.__next_node = value
+        self.__next_node = NodeValue
 
 
-class SinglyLinkedList:
-    """ Declares a class of SinglyLinkedList """
-
-    def __init__(self) -> None:
-        """ Intializes the private attribute """
+class SinglyLinkedList():
+    """Class SinglyLinkedList"""
+    def __init__(self):
+        """Initialization of SinglyLinkedList"""
         self.__head = None
 
-    def __str__(self) -> str:
-        """ returns string to be printed for SinglyLinkedList """
-        output = list()
-        future = self.__head
-
-        while future is not None:
-            output.append(str(future.data))
-            future = future.next_node
-
-        return "\n".join(output)
-
-    def sorted_insert(self, value):
-        """
-        Sorts the node values
-        Args:
-            value: value of node
-        """
+    def sorted_insert(self, DataValue):
+        """Inserts a nodes"""
+        NewNode = Node(DataValue)
         if self.__head is None:
-            self.__head = Node(value)
+            self.__head = NewNode
             return
-
-        if value < self.__head.data:
-            self.__head = Node(value, self.__head)  # beginning of node
+        if DataValue < self.__head.data:
+            NewNode.next_node = self.__head
+            self.__head = NewNode
             return
-
-        future, past = self.__head.next_node, self.__head
-        while future is not None:
-            if value < future.data:
-                past.next_node = Node(value, future)    # middle of node
+        actual = self.__head
+        while DataValue >= actual.data:
+            prev = actual
+            if actual.next_node:
+                actual = actual.next_node
+            else:
+                actual.next_node = NewNode
                 return
-            past = future
-            future = future.next_node
-        past.next_node = Node(value)    # end of node
+        prev.next_node = NewNode
+        NewNode.next_node = actual
+
+    def __str__(self):
+        """Class As a String"""
+        strg = ""
+        actual = self.__head
+        while actual:
+            strg += str(actual.data) + "\n"
+            actual = actual.next_node
+        return strg[:-1]
